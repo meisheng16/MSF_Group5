@@ -14,6 +14,7 @@ library(sqldf)
 library(rms)
 library(pscl)
 library(gridExtra)
+library(dplyr)
 ```
 
 ###Introduction(Marnelia):  
@@ -211,11 +212,10 @@ Insight :summarize a few demographic traits of our potential
 Insight : summarize a few behavior traits of our users and potential users
 
 #### 2.2 Other advertisement opportunity? We will use gaming and job data to see if these websites or apps can help us to recruit more users?  (Chewei and Mei-job, Vrat and Yerik-gaming )
-```{r CHEWEI AND MEI}
+```{r}
 ## your code here -chewei and mei
-## relationship between job searching preference and online dating preference  (Mei & Zhewei)
-```
 
+```
 Insight: Can we use gaming/job website as one of growth channel?
 ######Sample distribution of gaming response across gender and age group
 ```{r, echo = FALSE,out.width = "60%", fig.align = "center"}
@@ -288,10 +288,63 @@ chisq.test(table(date2a.game1))
 
 
 #### 2.3 After the phase of growth, we will seek monetization opportunity. Are the mentioned websites and app our potential advertisement buyers? (Chewei and Mei-job, Vrat and Yerik-gaming )
-```{r}
-## your code here -chewei and mei
+#####2.3.1 Difference of online dating between employment status.
+###### Assumption: In this question, we are going to lay the foundatino for our monetization strategy. This part will analyze  our users' employment status and if our users are attractive customers of advertisers. 
+*In this quesiton, we foucs more on people who use dating app. 
 
+```{r CHEWEI2, echo=FALSE, include=FALSE}
+## your code here -chewei and mei
+## relationship between job searching preference and online dating preference  (Zhewei)
+cupid_data1 <- read.csv ( "./Dataset/June 10-July 12, 2015 - Gaming, Jobs and Broadband - CSV.csv", colClasses = "factor" )
+cupid_data1 <- tbl_df( cupid_data1 )
+datingpeople <- cupid_data1 %>% filter (( eminuse == 1 | intmob                   ==1 ) & smart1 == 1 )
 ```
+
+
+```{r}
+datingpeople1<-datingpeople%>%filter(emplnw==1|emplnw==2|emplnw==3|emplnw==4)
+ggplot(data=cupid_data,aes(x=emplnw_group,fill=))+geom_bar()
+datejobtable<-table(datingpeople1$emplnw,datingpeople1$date2a)
+# exclude emplnw 5~9 (since too little obeservation, and date2a)
+datejobtable<-datejobtable[1:4,2:3] 
+datejobtable
+chisq.test(datejobtable)
+```
+From above graphic, we can find that people who have full-time work are more likely to be a dating app users. We futher conduct a chi-square test to testify if dating app usage will affect their employment status. The p-value is 0.04, below 0.05 siginificant level. Therefore, we prove that our users are potential customers for advertiser.   
+##### Action : We will use this figure in our sales kit to convince our advertisers that by investing in our in-app AD, they can acquire huge return. 
+
+#### 2.3.2: Is there a model can be used to describe job emplyment and dating app usage?  
+#### Assumption: We narrow down our potential customers to online job websites. Here we are going to access if there is any model we can use to predict one's usage of online job seeking.
+```{r}
+datingpeople[,"age"]<-as.numeric(unlist(datingpeople[,"age"]))
+for (i in 1:nrow(datingpeople)){
+  if (datingpeople[i,"marital"]=="1"){
+    datingpeople[i,"clsmari"]=1
+  }
+  else if (datingpeople[i,"marital"]=="2"){
+    datingpeople[i,"clsmari"]=1
+  }
+  else{
+    datingpeople[i,"clsmari"]=2
+  }
+}
+
+ggplot(datingpeople, aes(x=smjob1))+geom_bar(aes(fill=date2a))
+dating_between<-glm(smjob1~date2a+age+clsmari,data=datingpeople,family = "binomial")
+summary(dating_between)
+pR2(dating_between)
+#exp(confint(dating_between))
+#require(rms)
+#mm<-lrm(smjob1~date2a,data=datingpeople)
+#summary(mm)
+```
+If we use date2a (usin dating app) as predictaor of smjob1(using mobile phone to find job), the p-value of intercept, which is the base case of using dating app, is less than 0.05 significance; and p-value of date2a, which is not using dating app, is less than 00.05 significance. 
+#### Action: Merely using dating and age can give us 12% of R^2. We believe that if we can combine more demographic targeting in our tinder database, then we can have a more accurate targeting system for our advertisers. 
+
+
+
+
+
 
 
 ```{r, echo = FALSE,out.width = "60%", fig.align = "center"}
@@ -341,6 +394,3 @@ Insight: Can we sell ads to these websites/apps?
 #### 2 . Next step : What do we suggest Tinder to do?
 #### 3 . Further study : What kind of data we want to include in this dataset?
 
-
-
-# test ming hui
