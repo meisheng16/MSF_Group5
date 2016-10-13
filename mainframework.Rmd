@@ -303,7 +303,7 @@ datingpeople <- cupid_data1 %>% filter (( eminuse == 1 | intmob                 
 
 ```{r}
 datingpeople1<-datingpeople%>%filter(emplnw==1|emplnw==2|emplnw==3|emplnw==4)
-ggplot(data=cupid_data,aes(x=emplnw_group,fill=))+geom_bar()
+ggplot(data=cupid_data,aes(x=emplnw_group))+geom_bar()
 datejobtable<-table(datingpeople1$emplnw,datingpeople1$date2a)
 # exclude emplnw 5~9 (since too little obeservation, and date2a)
 datejobtable<-datejobtable[1:4,2:3] 
