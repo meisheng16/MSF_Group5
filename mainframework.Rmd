@@ -2,7 +2,7 @@
 title: "Final Draft"
 author: 'Group Five '
 date: "10/11/2016"
-output: html_document
+output: pdf_document
 ---
 
 ```{r Library, include=FALSE}
@@ -273,7 +273,7 @@ for (i in 1:ncol(tab)) {
 model.social <- glm(factor(date1a) ~ factor(snsjob1a), 
                     data = tab, 
                     family = "binomial")
-summary(model_social)
+summary(model.social)
 pr1 <- pR2(model.social) 
 
 #test whether there is overdispersion
@@ -326,7 +326,7 @@ model.cellphone <- glm(factor(date2a) ~ factor(q5a),
 summary(model.cellphone)
 pR2(model.cellphone)
 fitod <- glm(factor(date2a) ~ factor(q5a),
-             data = cellphone.table,
+             data = cellphone.tab,
              family = "quasibinomial")
 pchisq(summary(fitod)$dispersion * model.cellphone$df.residual, 
        model.cellphone$df.residual, lower=F)
@@ -339,7 +339,7 @@ pR2(model.cellphone)
 #test whether there is an overdispersion
 
 fitod <- glm(factor(date2a) ~ factor(q5a),
-             data = cellphone.table,
+             data = cellphone.tab,
              family = "quasibinomial")
 pchisq(summary(fitod)$dispersion * model.cellphone$df.residual, 
        model.cellphone$df.residual, lower=F)
