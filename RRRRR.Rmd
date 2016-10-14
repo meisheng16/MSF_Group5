@@ -1,0 +1,168 @@
+---
+title: "Analysis"
+author: "Virat Bhandari"
+date: "10/10/2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Question 1 : Correlation between people who use mobile for Internet and their place of work 
+```{r1}
+dataset <- read.csv("C:/Users/Virat Bhandari/Desktop/Rproject1.csv")
+
+```{r2}
+
+library(dplyr)
+library(ggplot2)
+
+onlinemob<-dataset %>% filter((eminuse==1|intmob==1)&smart1==1)
+onlinemob1 <- onlinemob %>% filter(emplnw==1|emplnw ==2 | emplnw==5)
+onlinemob1<-onlinemob1%>%filter(emptype1 == 1|emptype1 ==2|emptype1 == 3|emptype1== 4|emptype1== 5|emptype1== 6)
+
+ggplot(data=onlinemob1,aes(x=emptype1))+geom_bar(stat="count") +labs(x="1 LargeCorp 2	Medium-size 3	Small business 4 federal or local govt 5	School 6 Non-profit organization
+",y="Count of People used Mobile",title="Comparison of Mobile Users with their Place of work")
+
+```
+
+
+From above graphic, we can conclude that people who are active on Mobile and use internet are 
+working at large corporations. Interestingly, people having their own small business have more usage of mobile than people working in a medium size company
+```
+````
+#Question 2 : What are the type of work (Manual Labor / Non Manual Labour) at different places of work
+
+```{r3}
+dataset <- read.csv("C:/Users/Virat Bhandari/Desktop/Rproject1.csv")
+
+```{r4}
+library(dplyr)
+library(ggplot2)
+
+employtype<-dataset %>% filter(emptype1== 1&(emplnw == 1|emplnw == 2|emplnw == 5))
+
+employtype1<-employtype%>%filter(emptype2 == 1|emptype2 ==2)
+ggplot(data=employtype1,aes(x=emptype2))+geom_bar() + labs(x="1 Manual and Physical Labor 2 No Manual and Physical Labor",title="Type of work involved at Large Corporation")
+
+employtype<-dataset %>% filter(emptype1== 2&(emplnw == 1|emplnw == 2|emplnw == 5))
+
+employtype1<-employtype%>%filter(emptype2 == 1|emptype2 ==2)
+ggplot(data=employtype1,aes(x=emptype2))+geom_bar() + labs(x="1 Manual and Physical Labor 2 No Manual and Physical Labor",title="Type of work involved at Medium Sized Company")
+
+employtype<-dataset %>% filter(emptype1== 3&(emplnw == 1|emplnw == 2|emplnw == 5))
+
+employtype1<-employtype%>%filter(emptype2 == 1|emptype2 ==2)
+ggplot(data=employtype1,aes(x=emptype2))+geom_bar() + labs(x="1 Manual and Physical Labor 2 No Manual and Physical Labor",title="Type of work involved at Small Business")
+
+employtype<-dataset %>% filter(emptype1== 4&(emplnw == 1|emplnw == 2|emplnw == 5))
+
+employtype1<-employtype%>%filter(emptype2 == 1|emptype2 ==2)
+ggplot(data=employtype1,aes(x=emptype2))+geom_bar() + labs(x="1 Manual and Physical Labor 2 No Manual and Physical Labor",title="Type of work involved at Federal, state or local government")
+
+employtype<-dataset %>% filter(emptype1== 5&(emplnw == 1|emplnw == 2|emplnw == 5))
+
+employtype1<-employtype%>%filter(emptype2 == 1|emptype2 ==2)
+ggplot(data=employtype1,aes(x=emptype2))+geom_bar() + labs(x="1 Manual and Physical Labor 2 No Manual and Physical Labor",title="Type of work involved at School or Educational Institution")
+
+employtype<-dataset %>% filter(emptype1== 6&(emplnw == 1|emplnw == 2|emplnw == 5))
+
+employtype1<-employtype%>%filter(emptype2 == 1|emptype2 ==2)
+ggplot(data=employtype1,aes(x=emptype2))+geom_bar() + labs(x="1 Manual and Physical Labor 2 No Manual and Physical Labor",title="Type of work involved at Non Profit Organization")
+
+```
+
+
+From above graphs, we can conclude that people who are working at Small Business have more "Manual and Physical work  than other places of work whereas at rest places there is significantly lesser manual or physical work
+
+
+#Question 3 : Describing the distribution of type of work people do who are not involved in manual work
+
+```{r5}
+dataset <- read.csv("C:/Users/Virat Bhandari/Desktop/Rproject1.csv")
+
+library(dplyr)
+library(ggplot2)
+
+datingpeople<-dataset %>% filter(emptype2 == 2|emptype2 == 8 | emptype2 == 9)
+
+datingpeople1<-datingpeople%>%filter(emptype3 == 1|emptype3 ==2|emptype3 == 3|emptype3== 4|emptype3== 5)
+ggplot(data=datingpeople1,aes(x=emptype3))+geom_bar()+labs(x="1	Professional 2	Manager/executive 3	Government official 4	Administrative/clerical 5	Customer service
+",title="Type of work people do who are not involved in manual work")
+
+
+```
+
+#Question 4 : Correlation between employment status data and online dating 
+
+```{r6}
+dataset <- read.csv("C:/Users/Virat Bhandari/Desktop/Rproject1.csv")
+
+library(dplyr)
+library(ggplot2)
+
+emplstatus <-dataset %>% filter(emplnw == 1|emplnw == 2| emplnw == 3 | emplnw == 4)
+empldate1 <-emplstatus %>% filter(date1a == 1|eminuse == 1|intmob == 1)
+ggplot(data=empldate1,aes(x=emplnw))+geom_bar()+labs(x="1 Full-time
+2 Part-time 3	Retired 4	Not employed for pay",y="Count of People used Online dating sites",title="Relationship of Employment Status with Online Dating")
+
+```
+
+Conclusion : Interesting to notice that Retired people are the second most active group on online dating websites after Full time employed people 
+
+#Question 5 : Correlation between Online dating and Type of work 
+
+```{r7}
+dating <- glm(as.factor(date1a) ~ emptype3,data=empldate1,family = "binomial")
+summary(dating)
+``````
+<!-- Call: -->
+<!-- glm(formula = as.factor(date1a) ~ emptype3, family = "binomial",  -->
+<!--     data = empldate1) -->
+
+<!-- Deviance Residuals:  -->
+<!--     Min       1Q   Median       3Q      Max   -->
+<!-- -2.3042   0.4809   0.6019   0.6476   0.6476   -->
+
+<!-- Coefficients: -->
+<!--             Estimate Std. Error z value Pr(>|z|)     -->
+<!-- (Intercept)  1.29457    0.18011   7.188 6.59e-13 *** -->
+<!-- emptype3     0.16091    0.07414   2.170     0.03 *   -->
+<!-- --- -->
+<!-- Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 -->
+
+<!-- (Dispersion parameter for binomial family taken to be 1) -->
+
+<!--     Null deviance: 560.51  on 627  degrees of freedom -->
+<!-- Residual deviance: 555.36  on 626  degrees of freedom -->
+<!--   (1028 observations deleted due to missingness) -->
+<!-- AIC: 559.36 -->
+
+<!-- Number of Fisher Scoring iterations: 4 -->
+
+#Question 6 : Plotting types of Student involved in online dating 
+
+```{r8}
+dataset <- read.csv("C:/Users/Virat Bhandari/Desktop/Rproject1.csv")
+
+library(dplyr)
+library(ggplot2)
+
+emplstatus <-dataset %>% filter(emplnw == 1|emplnw == 2| emplnw == 3 | emplnw == 4|
+emplnw ==5 |emplnw ==6 |emplnw ==8 |emplnw ==98 |emplnw ==99)
+
+empldate1 <-emplstatus %>% filter(date1a == 1|eminuse == 1|intmob == 1)
+empldate2 <- empldate1 %>% filter(stud==1 |stud ==2)
+ggplot(data=empldate2,aes(x=stud))+geom_bar()+labs(x="1 Full-time student
+2 Part-time student",y="Count of Students",title="Students involved in Dating")
+```
+
+
+#Question 7 : Correlation between dating and student + type of work
+```{r10}
+dataset <- read.csv("C:/Users/Virat Bhandari/Desktop/Rproject1.csv")
+datingall <- glm(as.factor(date1a) ~ stud +emptype3 ,data=dataset,family = "binomial")
+summary(datingall)
+
+````
